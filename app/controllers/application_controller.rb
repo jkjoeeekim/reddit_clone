@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-    helper_method :ensure_logged_in, :logged_in?
+    helper_method :ensure_logged_in, :logged_in?, :current_user
 
     def current_user
         @current_user ||= User.find_by(session_token: session[:session_token])
@@ -23,5 +23,9 @@ class ApplicationController < ActionController::Base
 
     def ensure_logged_in
         redirect_to new_session_url unless logged_in?
+    end
+
+    def ensure_logged_out
+        redirect_to user_url(@current_user) if logged_in?
     end
 end
