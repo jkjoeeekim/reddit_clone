@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-    before_action :ensure_logged_in, only: [:show]
-    before_action :ensure_logged_out, only: [:new, :create, :index]
+    before_action :ensure_logged_in, only: [:show, :edit, :update]
+    before_action :ensure_logged_out, only: [:new, :create]
     
     def new
         @user = User.new
@@ -26,6 +26,23 @@ class UsersController < ApplicationController
     def index
         @users = User.all
         render :index
+    end
+
+    def edit
+        @user = User.find_by(id: params[:id])
+        render :edit
+    end
+
+    def update
+        user = User.find(params[:id])
+        if user.update(user_params)
+            flash[:success] = "Profile updated"
+            login!(user)
+            redirect_to user_url(user)
+        else
+            flash.now[:errors] = user.errors.full_messages
+            render :edit
+        end
     end
 
     private

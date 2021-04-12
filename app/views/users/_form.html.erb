@@ -1,10 +1,21 @@
-<form action="<%= users_url %>" method="post">
+<% if form_type == :edit %>
+    <% action_url = user_url(user) %>
+    <% button_text = "Edit User" %>
+<% else %>
+    <% action_url = users_url %>
+    <% button_text = "Sign Up" %>
+<% end %>
+
+<form action="<%= action_url %>" method="post">
     <%= auth_token %>
+    <% if form_type == :edit %>
+        <input type="hidden" name="_method" value="patch">
+    <% end %>
     <label for="username">Username: </label>
     <input type="text" id="username" name="user[username]" value="<%= user.username %>">
     
     <label for="password">Password: </label>
-    <input type="password" id="password" name="user[password]" value="<%= user.password %>">
+    <input type="password" id="password" name="user[password]">
     
-    <button type="submit">Sign Up</button>
+    <button type="submit"><%= button_text %></button>
 </form>
